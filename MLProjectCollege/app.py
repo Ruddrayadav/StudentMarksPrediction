@@ -14,7 +14,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom premium styling using CSS injection
+# Custom premium styling using CSS injectio
 st.markdown("""
     <style>
         /* Import outfit font */
@@ -123,20 +123,45 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Helper function to load model assets safely
+
+# Helper function to load model assets safely
 @st.cache_resource
 def load_assets():
     try:
-        with open('model.pkl', 'rb') as f:
+        dir_path = os.path.dirname(os.path.abspath(__file__))
+        with open(os.path.join(dir_path, 'model.pkl'), 'rb') as f:
             model = pickle.load(f)
-        with open('scaler.pkl', 'rb') as f:
+        with open(os.path.join(dir_path, 'scaler.pkl'), 'rb') as f:
             scaler = pickle.load(f)
-        with open('model_metadata.pkl', 'rb') as f:
+        with open(os.path.join(dir_path, 'model_metadata.pkl'), 'rb') as f:
             metadata = pickle.load(f)
         return model, scaler, metadata
     except Exception as e:
         return None, None, None
 
 model, scaler, metadata = load_assets()
+
+# Load dataset for exploration
+@st.cache_data
+def load_dataset():
+    dir_path = os.path.dirname(os.path.abspath(__file__))
+    csv_path = os.path.join(dir_path, 'student_exam_scores.csv')
+    if os.path.exists(csv_path):
+        return pd.read_csv(csv_path)
+    return None
+
+df = load_dataset()
+
+
+# Load dataset for exploration
+@st.cache_data
+def load_dataset():
+    if os.path.exists('student_exam_scores.csv'):
+        return pd.read_csv('student_exam_scores.csv')
+    return None
+
+df = load_dataset()
+
 
 # Load dataset for exploration
 @st.cache_data
